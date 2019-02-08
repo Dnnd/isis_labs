@@ -229,8 +229,9 @@ void dump(COUNTRY *list) {
 void clear(COUNTRY *list) {
     COUNTRY *it = list;
     while (it != NULL) {
+        COUNTRY *tmp  = it;
         it = it->next;
-        free(it);
+        free(tmp);
     }
 }
 
