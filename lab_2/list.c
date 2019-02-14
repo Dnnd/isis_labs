@@ -36,7 +36,7 @@ void delete(COUNTRY **list, COUNTRY *v) {
         return;
     }
     if (compare_name(*list, v) == 0) {
-        COUNTRY *target = *list;
+        COUNTRY *target = (*list)->next;
         if ((*list)->next != NULL) {
             (*list)->next = (*list)->next->next;
             *list = (*list)->next;
