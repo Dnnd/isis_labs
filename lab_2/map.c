@@ -24,12 +24,14 @@ unsigned int hash(char *key) {
 void map_add(COUNTRY **map, char *name, int population, int area) {
     unsigned idx = hash(name);
     COUNTRY **insertion_place = &map[idx];
-    if (*insertion_place == NULL) {
+    COUNTRY *target = find(*insertion_place, name);
+    if (target == NULL) {
         add(insertion_place, name, population, area);
     } else {
-        (*insertion_place)->population = population;
-        (*insertion_place)->area = area;
+        target->population = population;
+        target->area = area;
     }
+
 }
 
 /* Удаляет страну с указанным названием из хеш таблицы */
@@ -53,7 +55,7 @@ COUNTRY *map_find(COUNTRY **map, char *name) {
 void map_dump(COUNTRY **map) {
     for (unsigned i = 0; i < MAP_SIZE; ++i) {
         COUNTRY *it = map[i];
-        print_country(it);
+        dump(it);
     }
 }
 
