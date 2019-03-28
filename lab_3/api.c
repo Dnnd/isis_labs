@@ -9,6 +9,8 @@ int fetch_time(struct api_client *client, enum QUERY_METHOD method, const char *
             {.name="format", .name_len=sizeof("format") - 1, .value=format, .value_len =strlen(format)},
     };
 
+    struct http_client *httpc = client->httpc;
+
     int fd = 0;
     int err = open_socket(client->hostname, client->portname, &fd);
 
@@ -30,12 +32,9 @@ int fetch_time(struct api_client *client, enum QUERY_METHOD method, const char *
     struct http_header accept_header;
     make_http_header("Accept", 6, "application/json", sizeof("application/json") - 1, &accept_header);
 
-
-    struct http_client *httpc = client->httpc;
-
     init_http_response(httpc, resp);
-    if (method == GET) {
 
+    if (method == GET) {
         struct http_header headers[] = {
                 host_header,
                 connection_header,
@@ -88,5 +87,8 @@ int fetch_time(struct api_client *client, enum QUERY_METHOD method, const char *
         err = -228;
     }
     close(fd);
+    if (err != 0) {
+        clear_http_response(resp);
+    }
     return err;
 }

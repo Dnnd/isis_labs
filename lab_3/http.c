@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 void init_http_client(struct http_client *client, struct http_client_config *config) {
-    bzero(client, sizeof(*client));
+//    bzero(client, sizeof(*client));
     init_byte_vector(config->initial_read_buffer_size, &client->read_buffer);
     init_byte_vector(config->initial_write_buffer_size, &client->write_buffer);
     client->config = config;
@@ -134,7 +134,7 @@ int parse_http_response(struct http_client *client, struct http_response *respon
         char *end = NULL;
         int status_code = (int) strtol(response->body.data + 9, &end, 10);
         response->status_code = status_code;
-        return -1;
+        return 0;
     }
     return 0;
 }
@@ -304,10 +304,12 @@ int open_socket(const char *hostname, const char *portname, int *target_desc) {
     int fd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
     if (fd == -1) {
+        freeaddrinfo(res);
         return err;
     }
 
     if (connect(fd, res->ai_addr, res->ai_addrlen) == -1) {
+        freeaddrinfo(res);
         return err;
     }
 

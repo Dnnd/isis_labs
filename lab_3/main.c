@@ -50,7 +50,12 @@ int main(int argc, char **argv) {
             .httpc = &client,
     };
     struct http_response resp;
-    fetch_time(&api, query_params.query_method, query_params.type, query_params.format, &resp);
+    bzero(&resp, sizeof(struct http_response));
+    int err = fetch_time(&api, query_params.query_method, query_params.type, query_params.format, &resp);
+    if (err != 0){
+        clear_http_client(&client);
+        return err;
+    }
     if (resp.status_code != 200) {
         printf("non-200 status code: %d\n", resp.status_code);
     } else {
