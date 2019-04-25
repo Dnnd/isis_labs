@@ -1,5 +1,11 @@
+#ifndef USERSPACE
 #include <linux/types.h>
 #include <linux/slab.h>
+#else
+#include <stdlib.h>
+#include <stddef.h>
+#include <stdint.h>
+#endif
 
 struct pck_data {
     uint32_t in_addr;
@@ -24,8 +30,11 @@ typedef void (pck_data_handler)(struct pck_data *);
 
 struct pck_data_kbuff make_pck_data_kbuff(size_t kbuff_len) {
     struct pck_data_kbuff kbuff = {
-	        .buff = kcalloc(kbuff_len, sizeof(struct pck_data_kbuff), GFP_KERNEL),
-           // .buff = calloc(kbuff_len, sizeof(struct pck_data_kbuff)),
+#ifndef USERSPACE
+	    .buff = kcalloc(kbuff_len, sizeof(struct pck_data_kbuff), GFP_KERNEL),
+#else
+            .buff = calloc(kbuff_len, sizeof(struct pck_data_kbuff)),
+#endif
             .len = kbuff_len,
             .begin = 0,
             .end = 0,
@@ -35,11 +44,14 @@ struct pck_data_kbuff make_pck_data_kbuff(size_t kbuff_len) {
 }
 
 void free_pck_data_kbuff(struct pck_data_kbuff *data_source) {
+#ifndef USERSPACE
     kfree(data_source->buff);
+#else
+    free(data_source->buff);
+#endif
     data_source->begin = 0;
     data_source->end = 0;
     data_source->is_empty = 1;
-//    free(data_source->buff);
 }
 
 void reset_pck_data_kbuff(struct pck_data_kbuff *data_source) {
