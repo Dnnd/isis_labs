@@ -89,7 +89,7 @@ void format_pkg(struct pck_data *pkg, char *buff, char *format) {
 
     addr = pkg->in_addr;
 
-    in_high = 0xff;
+    in_high = addr & 0xff;
     in_prehigh = 0xff & (addr >> 8);
     in_prelow = 0xff & (addr >> 16);
     in_low = 0xff & (addr >> 24);
