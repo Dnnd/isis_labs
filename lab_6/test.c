@@ -2,7 +2,7 @@
 #include <fcntl.h>
 #include <linux/ioctl.h>
 #include <sys/ioctl.h>
-#include <zconf.h>
+#include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 
